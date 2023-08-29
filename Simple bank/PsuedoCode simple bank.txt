@@ -1,0 +1,1014 @@
+#Valentino Jaya Lay
+
+#TP062964
+
+
+# Main start
+
+define function Main_menu()
+    Display ("Hello Wellcome to The Maymobile")
+    Display ("*** May your life be good ***")
+    Display ("===============================")
+
+    loop while True
+        display("do you have any account yet? (y/n) or do you want to exit? (input e)")
+        read Askuser
+        if Askuser EQUALS "y" then
+            call function logon_menu()
+            break
+        elseif Askuser EQUALS "n" then
+            call function registeraccount()
+            break
+        else then
+            if Askuser EQUALS "yes" then
+                call functionlogon_menu()
+                break
+            elseif Askuser EQUALS "no" then
+                call function registeraccount()
+                break
+            elseif Askuser EQUALS "e" then
+                Display ("Have A G'day")
+                Display ("May the wind shows the way")
+                call function exit()
+            else then
+                Display ("can you plese cheeck again")
+            endif
+end define
+
+# starting Mainlogic
+
+define function logon_menu()
+    declare checkinguser as True
+    declare counter as 0
+    set Count = 0 - 1
+    do while checkinguser EQUALS True
+        display("please enter username: ")
+        read username
+        with open file Database.txt with read as fh1
+            for loop rec in file handler
+                declare userread using record split
+                set Count To 1 + Count
+                if username EQUALS userread then
+                    declare userread[0] as nameuser1
+                    declare userread[1] as password
+                    declare userread[2] as account_type
+                    declare userread[3] as Namename
+                    declare userread[4] as datebirth
+                    declare  userread[5] as emailuser1
+                    declare userread[6] as phonenumuser1
+                    declare userread[7] as accounttype
+                    declare userread[8] as balance
+                    declare checkinguser as False
+
+                    Call function passwordcheck(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1,
+                                  accounttype, balance, Count (pass information))
+                    break  # break from reality (loop I mean)
+                endif
+
+        if checkinguser EQUALS False then
+            break
+        else then
+            Display ("Thats not right, can you check again?")
+            set counter as counter + 1
+            if counter EQUALS 5 then
+                Display ("sorry thats too much attempt")
+                call function Main_menu()
+
+            endif
+        endif
+end define
+
+# ===========================================================
+
+
+define function passwordcheck(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype,
+                  balance, Count)
+    declare checker To 0
+    declare cnt To 0
+    loop while checker EQUALS 0
+        display("please enter password: ")
+        read passuser
+        if userpass EQUALS passuser then
+            call function accountautho(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype,
+                         balance, Count)
+            break
+        else then
+            Display ("That pass is suspicious, can you check again?")
+            set cnt as cnt + 1
+            if cnt EQUALS 5 them
+                Display ("thats too much attempt please log in again ")
+                call function Main_menu()
+                break
+            endif
+        endif
+end define
+
+# ============================================================
+
+
+define function accountautho(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype, balance, Count)
+    if account_type EQUALS "S" then
+        Display ("=============================")
+        Display ("    ")
+        Display ("Welcome Admin Super account")
+        Display ("    ")
+        Display ("=============================")
+        Call function adminprogram()
+    elseif account_type EQUALS "A" then
+        call function staff_program()
+
+    elseif account_type EQUALS "B" then
+
+        Display ("=============================")
+        Display ("    ")
+        Display ("Welcome User " + Namename)
+        Display ("    ")
+        Display ("=============================")
+        call function user_program(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype, balance, Count)
+   eendif
+end define
+
+# ============================================================
+
+define function adminprogram()
+    declare checkingcode1 To 1
+    loop while checkingcode1 EQUALS 1
+        Display ("=" * 20)
+        Display ("1 means to add staff admin account")
+        Display ("2 means delete data")
+        Display ("3 to log out")
+        declare adminauthoritycode To
+        display("Code: ")
+        if adminauthoritycode EQUALS "1" then
+            Display ("what do wish to edit data?")
+            call function edit_datasuperaccount()
+            checkingcode1 EQUALS 0
+            break
+        elseif adminauthoritycode EQUALS "2" then
+            Display ("Add admin account?")
+            call function Addaccountadmin()
+            checkingcode1 EQUALS 0
+            break
+        elseif adminauthoritycode EQUALS "3" then
+            Display ("OK got it")
+            checkingcode1 EQUALS 0
+            call function Main_menu()
+            break
+
+        else then
+            Display ("please enter from the number above")
+        endif
+
+end define
+# ===========================================================
+
+define function edit_datasuperaccount()
+    Display ("===============================================================================")
+    Display ("please see which account you want to edit with the correct username")
+    Display ("please keep in mind that the constumer's data with label B cannot be edit")
+    Display ("================================================================================")
+    declare fh3 To open file "Database.txt" with read
+    for loop rec in fh3
+        declare userread1 from rec.split(";")
+        declare userread1[0] as Usershow
+        Display (Usershow)
+    fh3.close()
+    declare cnt as 0 - 1
+    declare checkinguser as True
+    loop while checkinguser EQUALS True
+        display("please enter username: ")
+        read username
+        declare fh4 To open file "Database.txt" with read
+        for loop rec in fh4
+            declare cnt To 1 + cnt
+            declare userread2 from rec.split(";")
+            if username EQUALS userread2[0] then
+                declare userread2[0] as username2
+                declare userread2[1] as userpass2
+                declare userread2[2] as authority
+
+                call function Authority_user(cnt, authority, username2, userpass2)
+                fh4.close()
+                declare checkinguser To False
+                break
+            endif
+
+
+        if checkinguser EQUALS False then
+            break
+        else then
+            Display ("Thats not right, can you check again?")
+        endif
+end define
+
+# ============================================================
+
+
+define function Authority_user(cnt, authority, username2, userpass2)
+    if authority EQUALS "A" then
+        Display ("===============================")
+        call function superaccountedit(cnt, username2, userpass2)
+    elseif authority EQUALS "S" then
+        Display ("you cannot edit you own account no?")
+        call function edit_datasuperaccount()
+    elseif authority EQUALS "B" then
+        Display ("you cannot edit costumer account")
+        call function edit_datasuperaccount()
+    else then
+        Display ("please check again")
+    endif
+
+end define
+
+# ============================================================
+
+
+define function superaccountedit(cnt, username2, userpass2)
+    declare useradmincode as "A"
+    declare fh4 To open file "Database.txt" with read
+    declare list_line as fh4.readlines()
+    declare checkcheckcheck1 as True
+    fh4.close()
+    loop while checkcheckcheck1 EQUALS True
+        display("Please input number which one you want to edit, username as 1 loop while password as 2:  ")
+        read selection_question
+        declare accounttype as "R"
+        declare num1 as "0"
+        IF selection_question EQUALS "1" then
+            display ("the admin username:  ")
+            read useradmin
+            declare nodata as "checknon"
+            declare list_line[cnt] as f'{useradmin};{userpass2};{useradmincode};{useradmin};{nodata};{nodata};{nodata};{accounttype};{num1}\n'
+            declare fh5 to open file "Database.txt" with read
+            fh5.writelines(list_line)
+            fh5.close()
+            declare checkcheckcheck1 as False
+            call function adminprogram()
+            break
+        elseif selection_question EQUALS "2" then
+            display("The user admin password:  ")
+            read useradminpassword
+            declare nodata as "checknon"
+            list_line index cnt f'{username2};{useradminpassword};{useradmincode};{username2};{nodata};{nodata};{nodata};{accounttype};{num1}\n'
+            declare fh5 To open file "Database.txt" with write
+            fh5.writelines(list_line)
+            fh5.close()
+            declare checkcheckcheck1 To False
+            call function adminprogram()
+            break
+
+        else then
+            Display ("please check again")
+        endif
+
+end define
+
+
+# =================================================
+
+
+define function Addaccountadmin()
+    declare useradmincode1 To "A"
+    declare fh6 To open file "Database.txt", with append
+    Display ("please input the necessary information below")
+    display("Username: ")
+    read username3
+    display("Password: ")
+    readpassword3
+    declare nodata to "checknon"
+    declare accounttype to "A"
+    declare num1 as "0"
+    declare list_line2 To f'{username3};{password3};{useradmincode1};{username3};{nodata};{nodata};{nodata};{accounttype};{num1}\n'
+    fh6.write(list_line2)
+    fh6.close()
+    call function adminprogram()
+
+end define
+
+# =================================================
+define function registeraccount()
+
+    Display ("Hello, Wellcome new user! please fill the questions below")
+    loop while True
+        display("Name: ")
+        read user1name
+        display("Birthday? dd/mm/yy ")
+        read dayofbirth
+        display ("Email: ")
+        read email
+        display("Phone: ")
+        read phonnum
+        display("what is your account type? current/saving (c/r)")
+        read accounttype
+        IF accounttype EQUALS "c" then
+            display("are you sure all of the information is correct? (y/n)")
+            read askusercheck
+            IF askusercheck EQUALS "y" then
+                call function adddata(user1name, dayofbirth, email, phonenum, accounttype)
+                break
+            elseif askusercheck EQUALS "n" then
+                pass
+            IF askusercheck EQUALS "yes" then
+                call function adddata(user1name, dayofbirth, email, phonenum, accounttype)
+                break
+            elseif askusercheck EQUALS "no" then
+                pass
+            else then
+                Display ("please check your answer again")
+            endif
+        elseif accounttype EQUALS "s" then
+            display("are you sure all of the information is correct? (y/n)")
+            read askusercheck
+            IF askusercheck EQUALS "y" then
+                call function adddata(user1name, dayofbirth, email, phonenum, accounttype)
+                break
+            elseif askusercheck EQUALS "n" then
+                pass
+            IF askusercheck EQUALS "yes" then
+                call function adddata(user1name, dayofbirth, email, phonenum, accounttype)
+                break
+            elseif askusercheck EQUALS "no" then
+                pass
+            else then
+                Display ("please check your answer again")
+            endif
+
+        else then
+            Display ("there is no such a thing as " + accounttype)
+        endif
+
+
+end define
+
+define function adddata(user1name, dayofbirth, email, phonenum, accounttype)
+    declare fh7 To open file "Newaccount.txt", with append
+    declare linelist1 To f'{user1name};{dayofbirth};{email};{phonenum};{accounttype}\n'
+    fh7.write(linelist1)
+    fh7.close()
+    call function Main_menu()
+# =================================================
+
+define function staff_program()
+    Display ("=======================================")
+    Display ("Wellcome Admin")
+    Display ("What do you want to do today?")
+    Display ("=======================================")
+    loop while True
+        display("To add registration, please input 1, to change information about user data, press 2, To log out press 3. 4 for print report: ")
+        read staffautho
+        IF staffautho EQUALS "1" then
+            Display ("which account you want to approve?")
+            call function approval()
+            break
+        elseif staffautho EQUALS "2" then
+            Display ("which user account you want to change user account")
+            call function changeuser()
+            break
+        elseif staffautho EQUALS "3" then
+            Display ("ok got it, have a nice day")
+            call function exit()
+            break
+        elseif staffautho EQUALS "4" then
+            call function printreportadmin()
+            call function exit()
+        else then
+            display("check your input again")
+        endif
+
+end define
+
+# =================================================
+
+define function approval()
+    declare fh8 To open file "Newaccount.txt" with read
+    for loop rec in fh8
+        declare userread4 from rec.split(";")
+        declare userread4[0] as Usershow
+        display(Usershow)
+    fh8.close()
+    declare checkinguser To True
+    loop while checkinguser EQUALS True
+        display("which profile you want to approve? ")
+        read account
+        declare fh9 To open file "Newaccount.txt" with read
+        declare counter1 as 0 - 1
+        for loop rec in fh9
+            declare userread3 from rec.split(";")
+            declare counter1 as 1 + counter1
+            IF account EQUALS userread3[0] then
+                declare userread3[0] as nameuser
+                declare userread3[1] as userbirth
+                declare userread3[2] as useremail
+                declare userread3[3] as userphonenum
+                declare userread3[4] as usertype
+                fh9.close()
+                call function check_approval(nameuser, userbirth, useremail, userphonenum, counter1, usertype)
+                declare checkinguser as False
+                break
+            endif
+        IF checkinguser EQUALS False then
+            break
+        else then
+            display("please check the new client again")
+        endif
+end define
+
+
+
+define function check_approval(nameuser, userbirth, useremail, userphonenum, counter1, usertype)
+    declare fh11 To open file "Database.txt" with read
+    declare cnt as 0
+    IF usertype EQUALS "s" then
+        declare balance as float
+        for loop rec in fh11
+            declare cnt to cnt + 1
+        fh11.close()
+        declare cnt as string
+        declare fh10 To open file "Database.txt", with append
+        declare username4 To "user" + cnt.zfill(4)
+        declare password4 To cnt.zfill(4)
+        declare usercode1 as "B"
+        declare list_line3 To f'{username4};{password4};{usercode1};{nameuser};{userbirth};{useremail};{userphonenum};{usertype};{balance}\n'
+        fh10.write(list_line3)
+        fh10.close()
+
+        # this below for loop deleting data
+        declare fh12 To open file "Newaccount.txt" with read
+        declare list_line To fh12.readlines()
+        declare list_line[counter1] To f''
+        declare fh13 To open file "Newaccount.txt" with write
+        fh13.writelines(list_line)
+        fh13.close()
+
+        IMPORT datetime as myDate
+        declare now_date To myDate.datetime.now()
+        declare now_date To now_date.strftime
+
+        declare createinfo To "Create"
+        declare createinfo2 To "start with 100 ringgit"
+        with open file "record.txt" with append as fhrecord
+            declare linelistrecord To f'{createinfo};{now_date};{nameuser};{createinfo2}\n'
+            fhrecord.write
+
+    elseif usertype EQUALS "c" then
+        declare balance as float
+        for loop rec in fh11
+            declare cnt To cnt + 1
+        fh11.close()
+        declare cnt as string
+        declare fh10 To open file "Database.txt", with append
+        declare username4 To "user" + cnt.zfill
+        declare password4 To cnt.zfill
+        declare usercode1 as "B"
+        declare list_line3 To f'{username4};{password4};{usercode1};{nameuser};{userbirth};{useremail};{userphonenum};{usertype};{balance}\n'
+        fh10.write(list_line3)
+        fh10.close()
+
+        # this below for loop deleting data
+        declare fh12 To open file "Newaccount.txt" with read
+        declare list_line To fh12.readlines()
+        declare list_line[counter1] To f''
+        declare fh13 To open file "Newaccount.txt" with write
+        fh13.writelines
+        fh13.close()
+
+        IMPORT datetime as myDate
+        declare now_date as myDate.datetime.now()
+        declare now_date To now_date.strftime
+        declare createinfo as "Create"
+        declare createinfo2 as "start with 500 ringgit"
+        with open file "record.txt" with append as fhrecord
+            declare linelistrecord
+            fhrecord.write
+    endif
+    call function staff_program()
+
+end define
+
+# =============================================================
+
+define function changeuser()
+    display("===============================================================================")
+    display("please see which account you want to edit with the correct username")
+    display("please keep in mind that admin could only edit user account")
+    display("================================================================================")
+    declare fh14 To open file "Database.txt" with read
+    for loop rec in fh14
+        declare userread6 from rec.split(";")
+        declare Usershow as userread6[3]
+        display(Usershow)
+    fh14.close()
+    declare cnt To 0 - 1
+    declare checkinguser as True
+    loop while checkinguser EQUALS True
+        display("please enter his/her name: ")
+        read username
+        declare fh15 To open file "Database.txt" with read
+        for loop rec in fh15
+            declare cnt as 1 + cnt
+            declare userread7 To rec.split(";")
+            IF username EQUALS userread7[3] then
+                declare userread7[0] as usernumaccount
+                declare userread7[1] as userpass2
+                declare userread7[2] as authority1
+                declare userread7[3] as nameuser1
+                declare userread7[4] as datebirthchange
+                declare userread7[5] as emailchange
+                declare userread7[6] as phonnumuser
+                declare userread7[7] as accounttype
+                declare userread7[8] as balance
+                call function Authority_user_check(cnt, authority1, usernumaccount, userpass2, nameuser1, datebirthchange,
+                                     emailchange, phonnumuser, accounttype, balance)
+                fh15.close()
+                declare checkinguser To False
+                break
+            endif
+
+        IF checkinguser EQUALS False then
+            break
+        else then
+            display("Thats not right, can you check again?")
+        endif
+end define
+
+
+
+define function Authority_user_check(pass cnt, authority1, usernumaccount, userpass2, nameuser1, datebirthchange, emailchange,
+                         phonnumuser, accounttype, balance)
+    IF authority1 EQUALS "B" then
+        display("===============================")
+        call function changeuser1(pass cnt, authority1, userpass2, usernumaccount, nameuser1, datebirthchange, emailchange,
+        phonnumuser,accounttype, balance)
+    elseif authority1 EQUALS "A" then
+        display("you cannot edit you own account no?")
+        call function changeuser()
+    elseif authority1 EQUALS "S" then
+        display("you cannot edit your superior!")
+        call function changeuser()
+    else then
+        display("please check again")
+    endif
+end define
+
+
+
+define function changeuser1(cnt, authority1, userpass2, usernumaccount, nameuser1, datebirthchange, emailchange,
+                            phonnumuser,accounttype, balance)
+    declare repeater as True
+    loop while repeater EQUALS True
+        display("Please input number which one you want to edit, 1 for loop password, 2 for loop client name information
+                change 3 for loop client's birthdate, 4 client's email, 5, client's phone number 6 change client's account type:  ")
+        read selection_question
+        declare fh16 To open file "Database.txt" with read
+        declare list_line To fh16.readlines()
+        fh16.close()
+        IF selectio_question EQUALS "1" then
+            display("password:  ")
+            read data_change
+            declare list_line f'{usernumaccount};{data_change};{authority1};{nameuser1};{datebirthchange};{emailchange};
+                                {phonnumuser};{accounttype};{balance}\n'
+            declare fh17 To open file "Database.txt" with write
+            fh17.writelines(list_line)
+            fh17.close()
+
+        elseif selection_question EQUALS "2" then
+            display("Name:  ")
+            read data_change
+            list_line  f'{usernumaccount};{userpass2};{authority1};{data_change};{datebirthchange};{emailchange};{phonnumuser};
+                         {accounttype};{balance}\n'
+            declare fh17 To open file "Database.txt" with write
+            fh17.writelines(list_line)
+            fh17.close()
+
+        elseif selection_question EQUALS "3" then
+            display("dd/mm/yy:  ")
+            read data_change
+            list_line f'{usernumaccount};{userpass2};{authority1};{nameuser1};{data_change};{emailchange};{phonnumuser};
+                        {accounttype};{balance}\n'
+            declare fh17 To open file "Database.txt" with write
+            fh17.writelines(list_line)
+            fh17.close()
+
+        elseif selection_question EQUALS "4" then
+            display("email:  ")
+            read data_change
+            list_line f'{usernumaccount};{userpass2};{authority1};{nameuser1};{datebirthchange};{data_change};{phonnumuser};
+                        {accounttype};{balance}\n'
+            declare fh17 To open file "Database.txt" with write
+            fh17.writelines(list_line)
+            fh17.close()
+
+
+        elseif selection_question EQUALS "5" then
+            display("phone number:  ")
+            read data_change
+            list_line f'{usernumaccount};{userpass2};{authority1};{nameuser1};{datebirthchange};{emailchange};{data_change};
+                        {accounttype};{balance}\n'
+            declare fh17 To open file "Database.txt" with write
+            fh17.writelines(list_line)
+            fh17.close()
+        else then
+            display("please check again")
+        endif
+
+
+
+        display("would you like to change data again?(y/n) or you want to change data with different account? (d)")
+        read askagain
+        IF askagain EQUALS "yes" then
+            pass
+        elseif askagain EQUALS "d" then
+            call function changeuser()
+            break
+        elseif askagain EQUALS "no" then
+            call function staff_program()
+            break
+        elseif askagain EQUALS "n" then
+            call function staff_program()
+            break
+        elseif askagain EQUALS "y" then
+            pass
+        else then
+            display("please check again")
+        endif
+end define
+
+
+# ===============================================================
+
+# ================================================================
+
+define function user_program(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype, balance, Count)
+    loop while True
+        IF accounttype EQUALS "c" then
+            display("As a reminder, Current account must have 500 ringgit, or you cannot do any withdrawal")
+            display("input 1 for loop deposit, input 2 for loop withdraw, input 3 for loop check balance and review history,
+                    input 4 changing password, input 5 for loop logout, 6 print file costumer statement report")
+            display("Hello, What would you like to do?")
+            read askuser1
+            IF askuser1 EQUALS "1" then
+                call function deposit(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype,
+                                      balance, Count)
+                break
+            elseif askuser1 EQUALS "2" then
+                call function withdrawalcurrent(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1,
+                     accounttype, balance, Count)
+                break
+            elseif askuser1 EQUALS "3" then
+                call function checkbalance(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1,
+                                            accounttype, balance, Count)
+                break
+            elseif askuser1 EQUALS "4" then
+                call function changepassword(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1,
+                                             accounttype, balance, Count)
+                break
+            elseif askuser1 EQUALS "5" then
+                call function Main_menu()
+                break
+            elseif askuser1 EQUALS "6" then
+                call function printreport(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1,
+                                            accounttype, balance)
+                exit()
+            else then
+                Display("please check again")
+            endif
+
+
+        IF accounttype EQUALS "s" then
+            Display("As a reminder, Saving account must have 100 ringgit, or you cannot do any withdrawal")
+            Display(
+                "input 1 for loop deposit, input 2 for loop withdraw, input 3 for loop check balance and review history, input 4 changing password, input 5 for loop logout, 6 print file costumer statement report")
+            display("Hello, What would you like to do?")
+            read askuser1
+            IF askuser1 EQAULS "1" then
+                call function deposit(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype, balance, Count)
+                break
+            elseif askuser1 EQAULS "2" then
+                call function withdrawalsave(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1,
+                                                accounttype, balance, Count)
+                break
+            elseif askuser1 EQAULS "3" then
+                call function checkbalance(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype,
+                                            balance, Count)
+                break
+            elseif askuser1 EQAULS "4" then
+                call function changepassword(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype,
+                                                balance, Count)
+                break
+            elseif askuser1 EQAULS "5" then
+                call function Main_menu()
+                break
+            elseif askuser1 EQAULS "6" then
+                call function printreport(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1,
+                                            accounttype, balance)
+                exit()
+            else then
+                display("please check again")
+            endif
+        endif
+end define
+
+
+# ==============================================================
+
+define function deposit(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype, balance, Count)
+    loop while True
+        display("how much do you want to deposit? :")
+        try:
+            read deposit
+            set deposit as float
+        except:
+            display("please check again")
+        declare balance as float
+        declare total To balance + deposit
+
+        declare fh19 To open file "Database.txt" with read
+        declare list_line To fh19.readlines()
+        fh19.close()
+
+        declare list_line[Count]
+        declare fh20 To open file "Database.txt" with write
+        fh20.writelines(list_line)
+        fh20.close()
+
+        IMPORT datetime as myDate
+        declare now_date To myDate.datetime.now()
+        declare now_date To now_date.strftime
+
+        declare fh21 To open file "record.txt" with append
+        declare linelist1 To f'{now_date};{deposit};{Namename};{total}\n'
+        fh21.write(linelist1)
+        fh21.close()
+
+        call function user_program(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype, total, Count)
+        break
+end define
+
+# ====================================================================================================
+
+
+define function withdrawalcurrent(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype, balance, Count):
+    display("please keep in mind that you cannot withdraw below 500 ringgit")
+    loop while True
+        display("how much do you want to withdraw? :")
+        try:
+            read withdrawal
+            set withdrawal as float
+        except:
+            display("please check again")
+
+        declare #balance To float
+        declare total To balance - withdrawal
+
+        IF balance Less than equal 500 then
+            display("sorry you cannot perform withdrawal")
+        elseif total less than equal 500 then
+            display("sorry you cannot perform withdrawal")
+        elseif total more than equal 500 then
+            declare fh19 To open file "Database.txt" with read
+            declare list_line To fh19.readlines()
+            fh19.close()
+
+
+            declare list_line[Count] To f'{nameuser1};{userpass};{account_type};{Namename};{datebirth};{emailuser1};{phonenumuser1};{accounttype};{total}\n'
+            declare fh20 To open file "Database.txt" with write
+            fh20.writelines(list_line)
+            fh20.close()
+            endif
+
+
+        IMPORT datetime as myDate
+        declare now_date To myDate.datetime.now()
+        declare now_date To now_date.strftime
+
+        with open file "record.txt" with append as fh21
+            declare linelist1 To f'{now_date};{withdrawal};{Namename};{total}\n'
+            fh21.write(linelist1)
+
+
+        call function user_program(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype,total, Count)
+        break
+        endif
+
+end define
+
+# ====================================================================================================
+
+
+define function withdrawalsave(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype, balance, Count):
+    display("please keep in mind that you cannot withdraw below 100 ringgit")
+    loop while True
+        display("how much do you want to withdraw? :")
+        try:
+            read withdrawal
+            declare withdrawal as float
+        except:
+            display("please check again")
+
+        declare #balance To float
+        declare total To balance - withdrawal
+
+        IF balance less than equal 100 then
+            display("sorry you cannot perform withdrawal")
+        elseif total less equal 100 then
+            display("sorry you cannot perform withdrawal")
+        elseif total more than equal 500 then
+            declare fh19 To open file "Database.txt" with read
+            declare list_line To fh19.readlines()
+            fh19.close()
+            list_line[Count] To f'{nameuser1};{userpass};{account_type};{Namename};{datebirth};{emailuser1};{phonenumuser1};{accounttype};{total}\n'
+            declare fh20 To open file "Database.txt" with write
+            fh20.writelines(list_line)
+            fh20.close()
+        endif
+
+        IMPORT datetime as myDate
+        declare now_date To myDate.datetime.now()
+        declare now_date To now_date.strftime('Withdraw;%Y-%m-%d; at %H:%M:%S')
+
+        with open file "record.txt" with append as fh21
+            declare linelist1 To f'{now_date};{withdrawal};{Namename};{total}\n'
+            fh21.write(linelist1)
+
+        call function user_program(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype, balance, Count)
+end define
+
+# ====================================================================================================
+
+define function checkbalance(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype, balance, Count):
+    IF accounttype EQUALS "c" then
+        display("Hello "+Namename)
+        display("Check balance for loop Current account")
+        display(balance)
+
+    elseif accounttype EQUALS "s" then
+        display("Hello"+Namename)
+        display("Check balance for loop Saving account")
+        display(balance)
+    endif
+
+
+    call function user_program(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype, balance, Count)
+
+
+define function changepassword(nameuser1, userpass, account_type, Namename, datebirth, emailuser1, phonenumuser1, accounttype, balance, Count):
+    declare fh23 To open file "Database.txt" with read
+    declare list_line To fh23.readlines()
+    fh23.close()
+
+    loop while True
+        display("New Password:")
+        read password
+        display("Are you sure?")
+        read askagain
+        IF askagain EQUALS "y" then
+            list_line[
+                declare Count] To f'{nameuser1};{password};{account_type};{Namename};{datebirth};{emailuser1};{phonenumuser1}
+                                    ;{accounttype};{balance}\n'
+            declare fh24 To open file "Database.txt" with write
+            fh24.writelines(list_line)
+            fh24.close()
+            call function user_program(nameuser1, password, account_type, Namename, datebirth, emailuser1, phonenumuser1,
+                                        accounttype, balance, Count)
+            break
+        elseif askagain EQUALS "yes" then
+            list_line[
+                declare Count] To f'{nameuser1};{password};{account_type};{Namename};{datebirth};{emailuser1};{phonenumuser1}
+                                    ;{accounttype};{balance}\n'
+            declare fh25 To open file "Database.txt" with write
+            fh25.writelines(list_line)
+            fh25.close()
+            call function user_program(nameuser1, password, account_type, Namename, datebirth, emailuser1, phonenumuser1,
+                                        accounttype, balance, Count)
+            break
+        elseif askagain EQUALS "n" then
+            pass
+        elseif askagain EQUALS "no" then
+            pass
+        else then
+            display("please check again!")
+        endif
+end define
+
+
+#=====================================================================
+define function printreportadmin()
+    loop while True
+        with open file Database.txt with read as fh
+            for loop rec in fh
+                declare userreaduser as rec.split(";")
+                declare userreaduser[3] as Usershow
+                declare userreaduser[2] as authoautho
+                if authoautho equals "B" then
+                    print(Usershow)
+                endif
+
+        with open file Database.txt with read as fh1
+            display("which profile you want to check? ")
+            read account
+            for loop rec1 in fh1
+                declare nameuserread To rec1.split(";")
+                declare nameuserread[3] as nameuser
+                declare userreaduser[2] as userautho
+                if account equals nameuser and userautho equals "B" then
+                    function call printprint(account)
+                else then
+                    print("please check again?")
+                endif
+end define
+
+define function printprint(account)
+    with open file Record.txt with read as file record
+        for loop rec2 in filerecord
+            declare nameread To rec2.split(";")
+            declare name To nameread[4]
+            if name equals account then
+                declare check To nameread[0]
+                declare date To nameread[1]
+                declare time To nameread[2]
+                declare amount To nameread[3]
+                declare balance To nameread[5]
+                print(check + " " + date + " " + time + ", amount= " + amount + " balance=" + balance)
+            endif
+
+        print("please log in again")
+        exit()
+end define
+
+#=========================================================
+define function printreport(Namename)
+    loop while True
+        display("from what date? (yyyy-mm-dd)")
+        read askuser
+        display("To what date? (yyyy-mm-dd)")
+        read askuser2
+        declare check To False
+        with open file Record.txt with read as file read
+            for loop rec in fileread
+                declare datedata To rec.strip().split(";")
+                if Namename equals datedata[4] then
+                    declare datatime1 To datedata[1]
+                    declare datatime11 To datatime1.strip().split("-")
+                    declare yeardata To int(datatime11[0])
+                    declare monthdata To int(datatime11[1])
+                    declare daydata To int(datatime11[2])
+                    declare ansuser To askuser.strip().split("-")
+                    declare ansuser2 To askuser2.strip().split(("-"))
+
+                    declare action To datedata[0]
+                    declare balance To datedata[5]
+                    try
+                        declare year1 To int(ansuser[0])
+                        declare year2 To int(ansuser2[0])
+                        declare month1 To int(ansuser[1])
+                        declare month2 To int(ansuser2[1])
+                        declare day1 To int(ansuser[2])
+                        declare day2 To int(ansuser2[2])
+                    except
+                        continue
+
+                    if year1 < yeardata and year2 > yeardata then
+                        print(datatime1 + " " + action + " " + balance)
+                        declare check To True
+                    elseif year1 <= yeardata and year2 >= yeardata and month1 < monthdata and month2 > monthdata then
+                        print(datatime1 + " " + action + " " + balance)
+                        declare check To True
+                    elseif year1 <= yeardata and year2 >= yeardata and month1 <= monthdata and month2 >= monthdata and day1 < daydata and day2 > daydata then
+                        print(datatime1 + " " + action + " " + balance)
+                        declare check To True
+                    elseif year1 <= yeardata and year2 >= yeardata and month1 <= monthdata and month2 >= monthdata and day1 <= daydata and day2 >= daydata then
+                        print(datatime1 + " " + action + " " + balance)
+                        declare check To True
+                    elseif year1 <= yeardata and year2 >= yeardata and month1 < monthdata and month2 > monthdata and day1 <= daydata and day2 >= daydata then
+                        print(datatime1 + " " + action + " " + balance)
+                        declare check To True
+                    elseif year1 <= yeardata and year2 >= yeardata and month1 < monthdata and month2 > monthdata and day1 < daydata and day2 > daydata then
+                        print(datatime1 + " " + action + " " + balance)
+                        declare check To True
+                    endif
+                endif
+
+        if check equals True then
+            while true
+                print("please Re open the application")
+                print("are you sure you have read the history?")
+                read askask
+                if askask == "yes" then
+                    call exit()
+                elseif askask == "no" then
+                    print("ok")
+                end if
+        else then
+            print("please check again")
+            pass
+        endif
+end define
+
+
+#=====================================================================
+
+#execution
+
+#MAIN LOGIC!
+
+call main logic Main_menu()

@@ -1,0 +1,13 @@
+Super;1234;S;Superaccount;checknon1;checknon2;checknon3;R;0
+Admin1;123456;A;Admin1;checknon;checknon;checknon;R;0
+Admin2;1423;A;Adminaccount2;Chenon1;Chenon2;Chenon3;R;0
+User1;5322;B;checkdata1;Checnon1;Checnon2;Checnon3;s;200.0
+User2;4343;B;checkdata2;Non1;Non2;Non3;s;0
+user0005;0005;B;Zurigarz;21/06/03;valen43221@gmail.com;05342954;s;8700.0
+user0006;Zuriat;B;Zuri;10/03/01;lls@gmail.com;0329543023;c;2720.0
+user0007;12345;B;fauzer;24/12/01;fauzer@gmail.com;19430294230;c;700.0
+user0008;0008;B;Lolz;21/01/01;lls@gmail.com;0329543023;c;500
+user0009;0009;B;Zeo;22/03/30;zee@gmail.com;32321421;c;500
+Admin3;43453;A;Admin3;checknon;checknon;checknon;A;0
+user0011;0011;B;Garzene;04/32/43;Garz@gmail.com;00499395;s;100.0
+user0012;0012;B;Ouyang;12/04/01;Ouyang@yahoo.com;0834322134;s;100.0
