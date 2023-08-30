@@ -123,6 +123,10 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::get('/edit/admin/{id}', 'EditAdmin')->name('edit.admin');
         Route::post('/edit/post/admin/{id}', 'AdminEditSubmit')->name('edit.admin.submit');
         Route::get('/admin/delete/{id}', 'DeleteAdmin')->name('delete.admin');
+
+        Route::get('/Api/Try', 'APITry')->name('try.api');
     });
+
+
 
 });

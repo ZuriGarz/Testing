@@ -184,4 +184,9 @@ class AdminController extends Controller
         );
         return redirect()->back()->with($notification);
     }
+
+
+    public function APITry(){
+        return view('backend.pages.api.apigoogle');
+    }
 }
